@@ -1,4 +1,5 @@
 ***
+### Updates are no longer available for CSGO CHEATS for some reason
 ## MixoCSGO-project
 ##### An ordinary player who loves CS:GO
 ##### All projects are independently developed by Mixologist#6105
