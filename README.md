@@ -1,5 +1,5 @@
 ***
-### Updates are no longer available for CHEATS/SCRIPTS for some reason
+### Updates are no longer available for some reason
 ## MixoCSGO-project
 ##### An ordinary player who loves CS:GO
 ##### All projects are independently developed by Mixologist#6105
