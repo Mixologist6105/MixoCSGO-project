@@ -73,11 +73,11 @@ function desync_func(cmd)
             end
         else
             if is_mm_value[0] == false and is_mm_state == 1 then
-                is_mm_value[0] = 1
-                is_mm_state = 0
+                cmd.roll = 0
             end
         end
     end
+
     cmd.yaw = yaw
 end
 
@@ -102,4 +102,15 @@ ui_set_callback(lby_breaker, function(e)
 
     set_callback("setup_command", desync_func)
     set_callback("paint", indicator_func)
+end)
+
+client_set_event_callback("shutdown", function()
+    if globals.mapname() == nil then is_mm_state = 0 return end
+    
+    if is_mm_value ~= nil then
+        if is_mm_value[0] == false and is_mm_state == 1 then
+            is_mm_value[0] = 1
+            is_mm_state = 0
+        end
+    end
 end)
