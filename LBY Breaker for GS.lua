@@ -88,12 +88,17 @@ function indicator_func()
     end
 end
 
-ui_set_callback(lby_breaker, function(e)
-    local set_callback = ui_get(e) and client_set_event_callback or client_unset_event_callback
-
+local menu_visible = function()
     for i, v in pairs(lby) do 
-        ui_set_visible(v, ui_get(e)) 
+        ui_set_visible(v, ui_get(lby_breaker))
     end
+end
+
+menu_visible()
+
+ui_set_callback(lby_breaker, function(e)
+    menu_visible()
+    local set_callback = ui_get(e) and client_set_event_callback or client_unset_event_callback
 
     set_callback("setup_command", desync_func)
     set_callback("paint", indicator_func)
