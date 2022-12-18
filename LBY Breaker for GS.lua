@@ -27,9 +27,9 @@ local lby_breaker = ui_new_checkbox("AA", "Anti-aimbot angles", "\aD6BE73FFLBY b
 local lby = {
     key = ui_new_hotkey("AA", "Anti-aimbot angles", "LBY break", true),
     body_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", " Body inverter"),
-    roll_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", " Roll inverter"),
     desync = ui_new_slider("aa", "anti-aimbot angles", "Desync", 0, 65, 63),
     roll_enabled = ui_new_hotkey("AA", "Anti-aimbot angles", "\aD6BE73FFEnabled Roll"),
+    roll_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", " Roll inverter"),
     roll = ui_new_slider("aa", "anti-aimbot angles", "Roll", -50, 50, 0)
 }
 
