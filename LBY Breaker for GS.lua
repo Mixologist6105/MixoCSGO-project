@@ -78,6 +78,20 @@ function desync_func(cmd)
         end
     end
 
+    local is_mm_value = ffi_cast("bool*", game_rule[0] + 124)
+    if is_mm_value ~= nil then
+        if cmd.roll ~= 0 and ui_get(lby.roll_enabled) then
+            if is_mm_value[0] == true then
+                is_mm_value[0] = 0
+                is_mm_state = 1
+            end
+        else
+            if is_mm_value[0] == false and is_mm_state == 1 then
+                cmd.roll = 0
+            end
+        end
+    end
+
     cmd.yaw = yaw
 end
 
@@ -105,8 +119,7 @@ ui_set_callback(lby_breaker, function(e)
 end)
 
 client_set_event_callback("shutdown", function()
-    if globals.mapname() == nil then is_mm_state = 0 return end
-    
+    local is_mm_value = ffi_cast("bool*", game_rule[0] + 124)
     if is_mm_value ~= nil then
         if is_mm_value[0] == false and is_mm_state == 1 then
             is_mm_value[0] = 1
