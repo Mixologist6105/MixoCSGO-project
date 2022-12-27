@@ -19,7 +19,7 @@ local ent_state = {
 
 --Roll in MM From pilot
 local is_mm_state = 0
-local game_rule = ffi_cast("intptr_t**", ffi.cast("intptr_t", client_find_signature("client.dll", "\x83\x3D\xCC\xCC\xCC\xCC\xCC\x74\x2A\xA1")) + 2)[0]
+local game_rule = ffi_cast("intptr_t**", ffi_cast("intptr_t", client_find_signature("client.dll", "\x83\x3D\xCC\xCC\xCC\xCC\xCC\x74\x2A\xA1")) + 2)[0]
 
 --Menu Build
 local lby_breaker = ui_new_checkbox("AA", "Anti-aimbot angles", "\aD6BE73FFLBY breaker", true)
