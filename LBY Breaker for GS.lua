@@ -20,7 +20,6 @@ local ent_state = {
 --Roll in MM From pilot
 local is_mm_state = 0
 local game_rule = ffi_cast("intptr_t**", ffi.cast("intptr_t", client_find_signature("client.dll", "\x83\x3D\xCC\xCC\xCC\xCC\xCC\x74\x2A\xA1")) + 2)[0]
-local is_mm_value = ffi_cast("bool*", game_rule[0] + 124)
 
 --Menu Build
 local lby_breaker = ui_new_checkbox("AA", "Anti-aimbot angles", "\aD6BE73FFLBY breaker", true)
@@ -109,6 +108,10 @@ ui_set_callback(lby_breaker, function(e)
 end)
 
 client_set_event_callback("shutdown", function()
+    if globals.mapname() == nil then 
+        is_mm_state = 0
+        return
+    end
     local is_mm_value = ffi_cast("bool*", game_rule[0] + 124)
     if is_mm_value ~= nil then
         if is_mm_value[0] == false and is_mm_state == 1 then
