@@ -25,43 +25,38 @@ local game_rule = ffi_cast("intptr_t**", ffi_cast("intptr_t", client_find_signat
 local lby_breaker = ui_new_checkbox("AA", "Anti-aimbot angles", "\aD6BE73FFLBY breaker", true)
 local lby = {
     key = ui_new_hotkey("AA", "Anti-aimbot angles", "LBY break", true),
-    body_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", " Body inverter"),
+    body_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", "- Desync Inverter"),
     desync = ui_new_slider("aa", "anti-aimbot angles", "Desync", 0, 65, 63),
     roll_enabled = ui_new_hotkey("AA", "Anti-aimbot angles", "\aD6BE73FFEnabled Roll"),
-    roll_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", " Roll inverter"),
+    roll_inverter = ui_new_hotkey("AA", "Anti-aimbot angles", "- Roll inverter"),
     roll = ui_new_slider("aa", "anti-aimbot angles", "Roll", -50, 50, 0)
 }
 
 local micro_move = function(cmd)
     local local_player = entity_get_local_player()
+    if cmd.chokedcommands == 0 or ent_state.speed(local_player) > 2 or ent_state.is_peeking() or cmd.in_attack == 1 then return end
 
-    if globals_chokedcommands() == 0 or ent_state.speed(local_player) > 2 or ent_state.is_peeking() then return end
-    --micro move to break LBY
     cmd.forwardmove = 0.1
     cmd.in_forward = 1
 end
 
-function desync_func(cmd)
-    local local_player = entity_get_local_player()
-    local weapon = csgo_weapons[entity.get_prop(entity.get_player_weapon(entity.get_local_player()), "m_iItemDefinitionIndex")]
-    
+local desync_func = function(cmd)
     if not ui_get(ref.antiaim) then return end
     if not (ui_get(lby_breaker) and ui_get(lby.key)) then return end
+
+    local local_player = entity_get_local_player()
+    local weapon = csgo_weapons[entity_get_prop(entity_get_player_weapon(local_player), "m_iItemDefinitionIndex")]
+
     if ent_state.is_ladder(local_player) then return end
     if weapon == nil or weapon.type == "grenade" then return end
+
     micro_move(cmd)
-    --get origin yaw
-    local pitch, yaw = client_camera_angles()
     --inverter
     local body_side = ui_get(lby.body_inverter) and ui_get(lby.desync) or -ui_get(lby.desync)
-    ui_set(ref.body_yaw[2], ui_get(lby.body_inverter) and -60 or 60)
 
-    --Desync builder
-    if globals_chokedcommands() == 0 and cmd.in_attack ~= 1 then
-        yaw = yaw - body_side
+    if cmd.chokedcommands == 0 and cmd.in_attack ~= 1 then
+        cmd.yaw = cmd.yaw - body_side
         cmd.allow_send_packet = false
-    else
-        yaw = yaw
     end
 
     --Spoofs Client to use Roll in MM
@@ -80,11 +75,9 @@ function desync_func(cmd)
             end
         end
     end
-
-    cmd.yaw = yaw
 end
 
-function indicator_func()
+local indicator_func = function()
     --inverter indicator
     if ui_get(lby.body_inverter) then
         renderer_indicator(214, 190, 115, 255, "Inverter")
@@ -108,10 +101,7 @@ ui_set_callback(lby_breaker, function(e)
 end)
 
 client_set_event_callback("shutdown", function()
-    if globals.mapname() == nil then 
-        is_mm_state = 0
-        return
-    end
+    if globals.mapname() == nil then is_mm_state = 0 return end
     local is_mm_value = ffi_cast("bool*", game_rule[0] + 124)
     if is_mm_value ~= nil then
         if is_mm_value[0] == false and is_mm_state == 1 then
